@@ -1,0 +1,368 @@
+public class MyLinkedList<S> {
+
+    private Node<S> head;
+    private Node<S> tail;
+    public int size;
+
+    public Node<S> getHead() {
+        return head;
+    }
+
+    public void setHead(Node<S> head) {
+        this.head = head;
+    }
+
+    public Node<S> getTail() {
+        return tail;
+    }
+
+    public void setTail(Node<S> tail) {
+        this.tail = tail;
+    }
+
+    Node<S> addFirst(S x) {
+        Node<S> temp = new Node(x);
+        if (head == null) {
+            head = tail = temp;
+        } else {
+            temp.setNext(head);
+            head = temp;
+        }
+        size++;
+        return temp;
+    }
+
+    Node<S> recursion(Node<S> temp) {
+        if (temp.getNext() == null) {
+            return temp;
+        } 
+            temp = temp.getNext();
+            return recursion(temp); 
+    }
+
+    Node<S> addlast(S i) {
+        Node<S> temp = new Node(i);
+        if (head == null) {
+            head = tail = temp;
+        } else {
+            Node<S> curr = head;
+            while (curr.getNext() != null) {
+                curr = curr.getNext();
+            }
+            temp.setNext(null);
+            curr.setNext(temp);
+            tail = temp;
+        }
+        size++;
+        return temp;
+    }
+
+    Node<S> addByIndex(S i, int index) {
+        if (index < 0 || index > size + 1) {
+            throw new IndexOutOfBoundsException("Index out of Range");
+        }
+
+        Node<S> temp = new Node(i);
+        Node<S> curr = head;
+        int currIndex = 0;
+
+        if (index == 0) {
+            addFirst(i);
+        } else if (index == size) {
+            addlast(i);
+        } else {
+            while (currIndex != index - 1) {
+                curr = curr.getNext();
+                currIndex++;
+            }
+            temp.setNext(curr.getNext());
+            curr.setNext(temp);
+            size++;
+        }
+        return temp;
+    }
+
+    Node<S> removeFirst() {
+        Node<S> temp = head.getNext();
+        if (size == 0) {
+            throw new NullPointerException("Your LinkedList is Empty");
+        } else if (size == 1) {
+            head = tail = null;
+        } else {
+            head = head.getNext();
+        }
+        size--;
+        return temp;
+    }
+
+    Node<S> removeLast() {
+        Node<S> curr = head;
+        Node<S> temp = tail;
+        if (size == 0) {
+            throw new NullPointerException("Your LinkedList is Empty");
+        } else if (size == 1) {
+            head = tail = null;
+            size--;
+        } else {
+            for (int i = 1; i < size - 1; i++) {
+                curr = curr.getNext();
+            }
+            tail = curr;
+            tail.setNext(null);
+            size--;
+        }
+
+        return temp;
+    }
+
+    Node<S> removeByIndex(int index) {
+        Node<S> temp = head;
+        if (index < 0 || index > size + 1) {
+            throw new IndexOutOfBoundsException("Index out of Range");
+        } else if (size == 0) {
+            throw new NullPointerException("Your LinkedList is Empty");
+        } else if (size == 1) {
+            head = tail = null;
+            size--;
+        } else if (index == 1) {
+            removeFirst();
+        } else if (index == size) {
+            removeLast();
+        } else {
+            Node curr = head;
+            for (int i = 1; i < index - 1; i++) {
+                curr = curr.getNext();
+            }
+            temp = curr.getNext();
+            curr.setNext(curr.getNext().getNext());
+            size--;
+        }
+        return temp;
+    }
+
+    Node<S> findMiddle() {
+        if (size == 0) {
+            throw new NullPointerException("Your LinkedList is Empty");
+        }
+        Node first = head;
+        Node last = head;
+        while (last.getNext() != null && last.getNext().getNext() != null) {
+            first = first.getNext();
+            last = last.getNext().getNext();
+        }
+        return first;
+    }
+
+    void rightShift(int r) {
+        if (r == 0 || r == size) {
+            return;
+        } else {
+            if (r > size) {
+                r = r % size;
+            }
+            Node newHead = head;
+            Node newTail = head;
+            tail.setNext(head);
+            for (int i = 1; i < size - r; i++) {
+                newHead = newHead.getNext();
+                newTail = newTail.getNext();
+            }
+            newHead = newHead.getNext();
+            newTail.setNext(null);
+            head = newHead;
+            tail = newTail;
+        }
+    }
+
+    void LeftShift(int r) {
+        if (r == 0 || r == size) {
+            return;
+        } else {
+            if (r > size) {
+                r = r % size;
+            }
+            Node newHead = head;
+            Node newTail = head;
+            tail.setNext(head);
+            for (int i = 1; i < r; i++) {
+                newHead = newHead.getNext();
+                newTail = newTail.getNext();
+            }
+            newHead = newHead.getNext();
+            newTail.setNext(null);
+            head = newHead;
+            tail = newTail;
+        }
+    }
+
+    void reverse() {
+        tail = head;
+        Node<S> pointer = head;
+        Node<S> previous = null, current = null;
+        while (pointer != null) {
+            current = pointer;
+            pointer = pointer.getNext();
+            current.setNext(previous);
+            previous = current;
+            head = current;
+        }
+    }
+
+    int indexOf(S data) {
+        int index = -1;
+        if (size == 0) {
+            throw new NullPointerException("Your List is Empty");
+        } else {
+            int c = 1;
+            Node<S> curr = head;
+            while (curr != null) {
+                if (curr.getData() == data) {
+                    index = c;
+                    return index;
+                }
+                c++;
+                curr = curr.getNext();
+            }
+        }
+        return index;
+    }
+
+    int lastIndexOf(S data) {
+        int index = -1;
+        if (size == 0) {
+            throw new NullPointerException("Your List is Empty");
+        } else {
+            int c = 1;
+            Node<S> curr = head;
+            while (curr != null) {
+                if (curr.getData() == data) {
+                    index = c;
+                }
+                c++;
+                curr = curr.getNext();
+            }
+        }
+        return index;
+    }
+
+    void clear() {
+        head = tail = null;
+    }
+
+    Boolean contains(S data) {
+        if (size == 0) {
+            throw new NullPointerException("Your List is Empty");
+        } else {
+            Node<S> curr = head;
+            while (curr != null) {
+                if (curr.getData() == data) {
+                    return true;
+                }
+                curr = curr.getNext();
+            }
+        }
+        return false;
+    }
+
+    void uniqeElements() {
+        if (size == 0) {
+            throw new NullPointerException("Your List is Empty");
+        } else if (size == 1) {
+            throw new Error("your List contains one element");
+        } else {
+            Node<S> curr = head;
+            while (curr != null) {
+                Node<S> temp = curr.getNext();
+                Node<S> pre = curr;
+                while (temp != null) {
+                    if (curr.getData() == temp.getData()) {
+                        if (temp == tail) {
+                            tail = pre;
+                            pre.setNext(null);
+                        } else {
+                            pre.setNext(temp.getNext());
+                        }
+                    }
+                    temp = temp.getNext();
+                    pre = pre.getNext();
+                }
+                curr = curr.getNext();
+            }
+        }
+    }
+
+    Node<S> removeByValue(S data) {
+        Node<S> temp = null;
+        if (size == 0) {
+            throw new NullPointerException("Your List is Empty");
+        } else {
+            Node<S> pre = head;
+            Node<S> curr = head;
+            if (head.getData() == data) {
+                head = head.getNext();
+                while (curr != null) {
+                    if (curr.getData() == data) {
+                        temp = curr.getNext();
+                        pre.setNext(curr.getNext());
+                        size--;
+                    }
+                    pre = curr;
+                    curr = curr.getNext();
+                }
+            }
+            return temp;
+        }
+    }
+
+    S beginingIndex(int index) {
+        if (size < 4) {
+            throw new NullPointerException("Your List is Empty");
+        } else {
+            Node<S> indexNode = head;
+            for (int i = 1; i < index; i++) {
+                indexNode = indexNode.getNext();
+            }
+            tail.setNext(indexNode);
+            Node<S> fast = head.getNext().getNext();
+            Node<S> slow = head.getNext();
+            Node<S> curr = head;
+            while (fast != slow) {
+                fast = fast.getNext().getNext();
+                slow = slow.getNext();
+            }
+            while (slow != curr) {
+                slow = slow.getNext();
+                curr = curr.getNext();
+            }
+            tail.setNext(null);
+            return curr.getData();
+        }
+    }
+
+    MyLinkedList<S> cloneList() {
+        if (size == 0) {
+            throw new NullPointerException("Your List is Empty");
+        } else {
+            Node<S> curr = head;
+            MyLinkedList<S> copy = new MyLinkedList<>();
+            while (curr != null) {
+                copy.addlast(curr.getData());
+                curr = curr.getNext();
+            }
+            return copy;
+        }
+    }
+
+    @Override
+    public String toString() {
+        String s = "{ ";
+        Node curr = head;
+        while (curr != null) {
+            s += curr.getData() + ", ";
+            curr = curr.getNext();
+        }
+        s = s.substring(0, s.length() - 2);
+        s += " }";
+        return s;
+    }
+}
