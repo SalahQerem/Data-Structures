@@ -1,0 +1,92 @@
+public class MyStack {
+    private int size = 0;
+
+    Node current;
+
+    Boolean isEmpty() {
+        if (current == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    Node push(Integer data) {
+        Node puched = new Node(data);
+        if (current == null) {
+            current = puched;
+        } else {
+            Node temp = current;
+            current = puched;
+            current.setNext(temp);
+        }
+        size ++;
+        return puched;
+    }
+
+    Node pop() {
+        Node temp = null;
+        if (current == null) {
+            throw new NullPointerException("Your Stack is Empty");
+        } else if (current.getNext() == null) {
+            temp = current;
+            current = null;
+        } else {
+            temp = current;
+            current = current.getNext();
+        }
+        size --;
+        return temp;
+    }
+
+    Node peek() {
+        return current;
+    }
+
+    MyStack sort() {
+        if (current == null) {
+            throw new NullPointerException("Your Stack is Empty");
+        } else if (current.getNext() == null) {
+            throw new NullPointerException("Your Stack has one Element");
+        } else {
+            MyStack temp = new MyStack();
+            Node curr;
+            while (!isEmpty()) {
+                curr = pop();
+                while (!temp.isEmpty() && temp.peek().getData() <= curr.getData()) {
+                    push(temp.pop().getData());
+                }
+                temp.push(curr.getData());
+            }
+            return temp;
+        }
+    }
+
+    @Override
+    public String toString() {
+        String s = " }";
+        Node pr = current;
+        while (pr != null) {
+            s = ", " + pr.getData() + s;
+            pr = pr.getNext();
+        }
+        s = s.substring(2, s.length());
+        s = "{ " + s;
+        return s;
+    }
+    
+    
+//    @Override
+//    public String toString() {
+//        String s = "";
+//        Node pr = current;
+//        while (pr != null) {
+//            s += pr.getData()+" ";
+//            pr = pr.getNext();
+//        }
+//        return s;
+//    }
+
+    public int getSize() {
+        return size;
+    }
